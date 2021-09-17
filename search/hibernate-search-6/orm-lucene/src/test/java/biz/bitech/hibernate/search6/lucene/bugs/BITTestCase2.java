@@ -93,6 +93,8 @@ public class BITTestCase2  {
 			userTransaction.commit();
 		}
 
+		// test searching items by vendor, to prove indexing of
+		// @OneToMany @IndexedEmbedded vendorInfos was successful after merge
 		{
 			SearchSession searchSession = Search.session(em);
 
