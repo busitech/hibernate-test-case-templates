@@ -57,12 +57,16 @@ public class BITTestCase3 {
 			//  new for Hibernate Search 6
 			// ****************************
 			//
-			// even though the "other side" is updated here, it will
+			// if the "other side" is updated here, it will
 			// still be invisible in the index because the flush above caused
 			// early buffering, and this statement won't cause another flush...
-			item1.getVendorInfos().add(itemVendorInfo1);
+			//
+			// since objects actually come in pre-populated from the client,
+			// it is not feasible for this kind of logic to be hard coded
+			// on the server side
+			// item1.getVendorInfos().add(itemVendorInfo1);   // would have no effect
 
-			// therefore, resubmit object for a second indexing pass
+			// therefore, resubmit refreshed object for a second indexing pass
 			SearchSession searchSession = Search.session(em);
 			SearchIndexingPlan indexingPlan = searchSession.indexingPlan();
 			indexingPlan.addOrUpdate( item1 );
@@ -96,7 +100,7 @@ public class BITTestCase3 {
 			// at this point, vendorInfos is still null
 			assertNull(item1.getVendorInfos());
 
-			// this early flush will cause next search to fail
+			// this early flush will cause next search to fail <-- BUG
 			em.flush();
 
 			// refresh item1 to add proxy to vendorInfos

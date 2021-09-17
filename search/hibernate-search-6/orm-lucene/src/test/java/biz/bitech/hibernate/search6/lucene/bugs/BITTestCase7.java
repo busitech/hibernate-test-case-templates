@@ -2,6 +2,7 @@ package biz.bitech.hibernate.search6.lucene.bugs;
 
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
+import org.hibernate.search.mapper.orm.work.SearchIndexingPlan;
 import org.junit.Test;
 
 import javax.persistence.EntityManager;
@@ -51,9 +52,12 @@ public class BITTestCase7 {
             //  new for Hibernate Search 6
             // ****************************
             //
-            item1.setVendorInfos(new HashSet<>());
-            item1.getVendorInfos().add(itemVendorInfo1);
-
+            em.flush();
+            item1 = em.find(Item.class, item1.getId());
+            em.refresh(item1);
+            SearchSession searchSession = Search.session(em);
+            SearchIndexingPlan indexingPlan = searchSession.indexingPlan();
+            indexingPlan.addOrUpdate(item1);
             userTransaction.commit();
         }
 

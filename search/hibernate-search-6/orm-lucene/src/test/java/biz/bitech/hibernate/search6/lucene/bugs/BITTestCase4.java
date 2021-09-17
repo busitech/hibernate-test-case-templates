@@ -43,10 +43,18 @@ public class BITTestCase4 {
 			//  new for Hibernate Search 6
 			// ****************************
 			//
-			item1.setVendorInfos(new HashSet<>());
-			item1.getVendorInfos().add(itemVendorInfo1);
+			// this would work, but hard coding is not desired
+			// item1.setVendorInfos(new HashSet<>());
+			// item1.getVendorInfos().add(itemVendorInfo1);
 			//
+			// objects come in pre-populated from the client, and
+			// the server just needs to validate and save
 			em.persist(itemVendorInfo1);
+			em.flush();
+			em.refresh(item1);
+			SearchSession searchSession = Search.session(em);
+			SearchIndexingPlan indexingPlan = searchSession.indexingPlan();
+			indexingPlan.addOrUpdate( item1 );
 			
 			userTransaction.commit();
 		}
