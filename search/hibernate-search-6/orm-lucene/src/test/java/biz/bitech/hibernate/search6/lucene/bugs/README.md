@@ -12,3 +12,10 @@ code was adjusted to avoid the problem illustrated in `BITTestCase2` to allow th
 
 `BITTestCase4` - This test case illustrates the only way persist and merge can be used if Hibernate
 Search 6 is to index the object correctly.
+
+`BITTestCase6` - This test case illustrates the regression of Hibernate Search 6 from what Hibernate Search 5
+supported with respect to getting an entity A reindexed after persisting an new instance of an entity B 
+which is @ContainedIn entity A.
+
+`BITTestCase7` - This test case illustrates the changes necessary with Hibernate Search 6 to avoid the
+problem illustrated by `BITTestCase6`.
