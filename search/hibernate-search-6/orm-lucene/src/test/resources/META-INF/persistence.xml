@@ -11,5 +11,23 @@
 
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
 
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <property name="hibernate.connection.driver_class" value="org.h2.Driver"/>
+            <property name="hibernate.connection.url" value="jdbc:h2:mem:db1;DB_CLOSE_DELAY=-1"/>
+            <property name="hibernate.connection.username" value="sa"/>
+            <property name="hibernate.connection.pool_size" value="5"/>
+
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="true"/>
+
+            <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+
+            <property name="hibernate.search.backend.directory.root" value="target/test-indexes"/>
+            <property name="hibernate.search.backend.analysis.configurer" value="org.hibernate.search.bugs.YourAnalysisConfigurer"/>
+
+            <property name="hibernate.search.schema_management.strategy" value="drop-and-create-and-drop"/>
+            <property name="hibernate.search.automatic_indexing.synchronization.strategy" value="sync"/>
+        </properties>
     </persistence-unit>
 </persistence>
