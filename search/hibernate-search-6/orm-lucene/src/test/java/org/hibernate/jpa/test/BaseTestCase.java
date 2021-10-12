@@ -1,14 +1,22 @@
 package org.hibernate.jpa.test;
 
+import biz.bitech.hibernate.search6.lucene.bugs.Item;
 import org.hibernate.Session;
 import org.hibernate.boot.registry.internal.StandardServiceRegistryImpl;
+import org.hibernate.bytecode.enhance.spi.interceptor.LazyAttributeLoadingInterceptor;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Environment;
+import org.hibernate.engine.spi.PersistentAttributeInterceptable;
+import org.hibernate.engine.spi.PersistentAttributeInterceptor;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.metamodel.spi.MetamodelImplementor;
+import org.hibernate.persister.entity.EntityPersister;
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.hibernate.search.mapper.orm.work.SearchIndexingPlan;
 import org.hibernate.testing.junit4.CustomRunner;
+import org.hibernate.tuple.entity.EntityMetamodel;
 import org.jboss.logging.Logger;
 import org.junit.After;
 import org.junit.Before;
@@ -126,5 +134,23 @@ public abstract class BaseTestCase  {
 		catch (RuntimeException e) {
 			System.out.println("[GenericFlexBean] Indexing issue: " + e.getMessage());
 		}
+	}
+
+	protected <T> T applyInterception(T entity) {
+		SharedSessionContractImplementor s = getDelegate().unwrap(SharedSessionContractImplementor.class);
+		MetamodelImplementor entityMetamodelImpl = s.getFactory().getMetamodel();
+		final EntityPersister persister = entityMetamodelImpl.entityPersister(Item.class.getName());
+		EntityMetamodel entityMetamodel =  persister.getEntityMetamodel();
+
+		PersistentAttributeInterceptor interceptor = new LazyAttributeLoadingInterceptor(
+				entityMetamodel.getName(),
+				null,
+				entityMetamodel.getBytecodeEnhancementMetadata()
+						.getLazyAttributesMetadata()
+						.getLazyAttributeNames(),
+				s
+		);
+		( (PersistentAttributeInterceptable) entity ).$$_hibernate_setInterceptor(interceptor);
+		return entity;
 	}
 }

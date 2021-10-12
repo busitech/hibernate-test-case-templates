@@ -29,6 +29,10 @@
 
             <property name="hibernate.search.schema_management.strategy" value="drop-and-create-and-drop"/>
             <property name="hibernate.search.automatic_indexing.synchronization.strategy" value="sync"/>
+
+            <property name="hibernate.enhancer.enableDirtyTracking" value="false"/>
+            <property name="hibernate.enhancer.enableLazyInitialization" value="true"/>
+            <property name="hibernate.enhancer.enableAssociationManagement" value="false"/>
         </properties>
     </persistence-unit>
 </persistence>
