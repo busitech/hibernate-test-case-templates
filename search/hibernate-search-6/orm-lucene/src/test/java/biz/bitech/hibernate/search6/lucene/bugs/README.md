@@ -19,3 +19,12 @@ which is @ContainedIn entity A.
 
 `BITTestCase7` - This test case illustrates the changes necessary with Hibernate Search 6 to avoid the
 problem illustrated by `BITTestCase6`.
+
+`BITTestCase8` - This test case removes the calls to `refresh()`, and instead uses lazy loading and bi-directional 
+association management features provided by the Hibernate bytecode enhancer
+
+`BITTestCase9` - This test case removes the calls to `refresh()`, and uses lazyLoading and special Hibernate methods
+to instantiate entities after the session has been opened.
+
+`BITTestCase10` - This test case removes the calls to `refresh()`, and uses lazyLoading and code from PojoEntityInstantiator
+to apply interceptor functionality to entities instantiated outside the session.
