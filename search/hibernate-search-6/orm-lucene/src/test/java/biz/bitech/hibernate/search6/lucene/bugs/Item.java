@@ -7,6 +7,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextFi
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
+import java.util.Collection;
 import java.util.Set;
 
 @Entity
@@ -14,6 +15,7 @@ import java.util.Set;
 public class Item extends BusinessEntity{
 
 	private String name;
+	private Manufacturer manufacturer;
 	private Set<ItemVendorInfo> vendorInfos;
 
 	protected Item() {
@@ -43,4 +45,24 @@ public class Item extends BusinessEntity{
 		this.vendorInfos = vendorInfo;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@IndexedEmbedded
+	public Manufacturer getManufacturer() {
+		return manufacturer;
+	}
+
+	public void setManufacturer(Manufacturer manufacturer) {
+		this.manufacturer = manufacturer;
+	}
+
+	private Collection<SalesOrderDetail> salesOrderDetails;
+
+	@OneToMany(mappedBy = "item")
+	public Collection<SalesOrderDetail> getSalesOrderDetails() {
+		return salesOrderDetails;
+	}
+
+	public void setSalesOrderDetails(Collection<SalesOrderDetail> salesOrderDetails) {
+		this.salesOrderDetails = salesOrderDetails;
+	}
 }
