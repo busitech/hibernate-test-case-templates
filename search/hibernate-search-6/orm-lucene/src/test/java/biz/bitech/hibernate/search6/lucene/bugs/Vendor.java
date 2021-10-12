@@ -14,9 +14,8 @@ import java.util.Collection;
 
 @Entity
 @Indexed
-public class Vendor {
+public class Vendor extends BusinessEntity {
 
-    private Long id;
     private String name;
     private Collection<ItemVendorInfo> itemVendorInfos;
 
@@ -24,18 +23,8 @@ public class Vendor {
     }
 
     public Vendor(Long id, String name) {
-        this.id = id;
+        super(id);
         this.name = name;
-    }
-
-    @Id
-    @DocumentId
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     @FullTextField(analyzer = "nameAnalyzer")
@@ -56,10 +45,4 @@ public class Vendor {
         this.itemVendorInfos = itemVendorInfos;
     }
 
-    @GenericField(name = "id", projectable = Projectable.YES, sortable = Sortable.YES, searchable = Searchable.YES)
-    @IndexingDependency(derivedFrom = @ObjectPath(@PropertyValue(propertyName = "id")))
-    @Transient
-    public Long getIdForIndex() {
-        return id;
-    }
 }

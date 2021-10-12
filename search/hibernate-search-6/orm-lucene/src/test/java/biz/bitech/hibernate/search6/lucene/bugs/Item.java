@@ -1,8 +1,6 @@
 package biz.bitech.hibernate.search6.lucene.bugs;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
@@ -13,29 +11,17 @@ import java.util.Set;
 
 @Entity
 @Indexed
-public class Item {
+public class Item extends BusinessEntity{
 
-	private Long id;
 	private String name;
-
 	private Set<ItemVendorInfo> vendorInfos;
 
 	protected Item() {
 	}
 
 	public Item(Long id, String name) {
-		this.id = id;
+		super(id);
 		this.name = name;
-	}
-
-	@Id
-	@DocumentId
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	@FullTextField(analyzer = "nameAnalyzer")
@@ -48,7 +34,7 @@ public class Item {
 	}
 
 	@OneToMany(mappedBy = "item", targetEntity = ItemVendorInfo.class)
-	@IndexedEmbedded(includePaths = {"vendor.id"})
+	@IndexedEmbedded(includeEmbeddedObjectId = true)
 	public Set<ItemVendorInfo> getVendorInfos() {
 		return this.vendorInfos;
 	}

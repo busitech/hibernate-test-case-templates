@@ -10,9 +10,8 @@ import java.math.BigDecimal;
 
 @Entity
 @Indexed
-public class ItemVendorInfo {
+public class ItemVendorInfo extends BusinessEntity {
 
-    private Long id;
     private Item item;
     private Vendor vendor;
     private BigDecimal cost;
@@ -21,20 +20,10 @@ public class ItemVendorInfo {
     }
 
     public ItemVendorInfo(Long id, Item item, Vendor vendor, BigDecimal cost) {
-        this.id = id;
+        super(id);
         this.item = item;
         this.vendor = vendor;
         this.cost = cost;
-    }
-
-    @Id
-    @DocumentId
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -49,7 +38,7 @@ public class ItemVendorInfo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    @IndexedEmbedded
+    @IndexedEmbedded(includeEmbeddedObjectId = true)
     public Vendor getVendor() {
         return this.vendor;
     }
