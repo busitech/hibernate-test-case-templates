@@ -1,17 +1,14 @@
 package biz.bitech.hibernate.search6.lucene.bugs;
 
-import org.hibernate.search.engine.backend.types.Projectable;
-import org.hibernate.search.engine.backend.types.Searchable;
-import org.hibernate.search.engine.backend.types.Sortable;
+import org.hibernate.jpa.test.BITEntity;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
 import javax.persistence.Version;
 
 @MappedSuperclass
-public class BusinessEntity {
+public class BusinessEntity implements BITEntity {
 
     private Long id;
     private int version;

@@ -18,9 +18,14 @@ public class SerialNumber extends BusinessEntity
 
     }
 
-    public SerialNumber(Long id, String serialNumber) {
+    public SerialNumber(Long id) {
+        super(id);
+    }
+
+    public SerialNumber(Long id, String serialNumber, SalesOrderDetail salesOrderDetail) {
         super(id);
         this.serialNumber = serialNumber;
+        this.salesOrderDetail = salesOrderDetail;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -18,6 +18,10 @@ public class SalesOrderDetail extends BusinessEntity {
 
     }
 
+    public SalesOrderDetail(Long id) {
+        super(id);
+    }
+
     public SalesOrderDetail(Long id, SalesOrder salesOrder, Item item) {
         super(id);
         this.salesOrder = salesOrder;
