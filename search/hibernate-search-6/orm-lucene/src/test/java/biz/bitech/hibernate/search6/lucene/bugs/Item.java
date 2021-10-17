@@ -8,6 +8,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmbedded;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -55,14 +56,25 @@ public class Item extends BusinessEntity{
 		this.manufacturer = manufacturer;
 	}
 
-	private Collection<SalesOrderDetail> salesOrderDetails;
+	private Set<SalesOrderDetail> salesOrderDetails = new HashSet<>();
 
 	@OneToMany(mappedBy = "item")
-	public Collection<SalesOrderDetail> getSalesOrderDetails() {
+	public Set<SalesOrderDetail> getSalesOrderDetails() {
 		return salesOrderDetails;
 	}
 
-	public void setSalesOrderDetails(Collection<SalesOrderDetail> salesOrderDetails) {
+	private Set<ItemText> itemTexts;
+
+	public void setSalesOrderDetails(Set<SalesOrderDetail> salesOrderDetails) {
 		this.salesOrderDetails = salesOrderDetails;
+	}
+
+	@OneToMany(mappedBy = "item")
+	public Set<ItemText> getItemTexts() {
+		return this.itemTexts;
+	}
+
+	public void setItemTexts(Set<ItemText> itemTexts) {
+		this.itemTexts = itemTexts;
 	}
 }

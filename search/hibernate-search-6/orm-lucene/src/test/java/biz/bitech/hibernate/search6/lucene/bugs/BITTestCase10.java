@@ -196,7 +196,8 @@ public class BITTestCase10 extends BaseTestCase {
 
             persist(item3);
 
-            Vendor vendor1 = em.find(Vendor.class, 1L);
+            Vendor vendor1 = new Vendor(1L, "");
+            applyInterceptor(vendor1);
             ItemVendorInfo itemVendorInfo1 = new ItemVendorInfo(3L, item3, vendor1, new BigDecimal("2000"));
             persist(itemVendorInfo1);
 
@@ -308,6 +309,68 @@ public class BITTestCase10 extends BaseTestCase {
 
                 endTransaction();
             }
+        }
+
+        {
+            startTransaction();
+
+            Item item10 = new Item(10L, "");
+            applyInterceptor(item10);
+
+            Vendor vendor1 = new Vendor(1L, "");
+            applyInterceptor(vendor1);
+
+            ItemVendorInfo itemVendorInfo1 = new ItemVendorInfo(5L, item10, vendor1, new BigDecimal("2000"));
+            persist(itemVendorInfo1);
+
+            endTransaction();
+        }
+
+        {
+            startTransaction();
+            SearchSession searchSession = Search.session(em);
+            List<Item> hits = searchSession.search(Item.class)
+                    .where(f -> f.match().field("vendorInfos.vendor.id").matching(1L))
+                    .fetchHits(20);
+            assertThat(hits).hasSize(4);
+            endTransaction();
+        }
+
+        {
+            startTransaction();
+            ItemVendorInfo itemVendorInfo1 = em.find(ItemVendorInfo.class, 5L);
+            em.remove(itemVendorInfo1);
+            endTransaction();
+        }
+
+        {
+            startTransaction();
+            SearchSession searchSession = Search.session(em);
+            List<Item> hits = searchSession.search(Item.class)
+                    .where(f -> f.match().field("vendorInfos.vendor.id").matching(1L))
+                    .fetchHits(20);
+            assertThat(hits).hasSize(3);
+            endTransaction();
+        }
+
+        {
+            startTransaction();
+
+            Item i = new Item(11L, "");
+
+            Manufacturer manufacturer = new Manufacturer(1L, "");
+            applyInterceptor(manufacturer);
+
+            i.setManufacturer(manufacturer); // simulate detached manufacturer
+            i.setName("Item 10 Test update with lazy init collection");
+
+            applyInterceptorBeforeMerge(i);
+            i = em.merge(i);
+            em.flush();
+
+            Set<ItemText> list = i.getItemTexts();
+
+            endTransaction();
         }
     }
 }

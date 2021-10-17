@@ -169,7 +169,7 @@ public abstract class BaseTestCase  {
 		EntityMetamodel entityMetamodel =  persister.getEntityMetamodel();
 		PersistentAttributeInterceptor interceptor = new LazyAttributeLoadingInterceptor(
 				entityMetamodel.getName(),
-				null,
+				entity.getId(),
 				entityMetamodel.getBytecodeEnhancementMetadata()
 						.getLazyAttributesMetadata()
 						.getLazyAttributeNames(),
