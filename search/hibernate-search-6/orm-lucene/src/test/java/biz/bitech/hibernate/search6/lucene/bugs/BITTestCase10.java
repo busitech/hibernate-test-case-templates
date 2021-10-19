@@ -118,9 +118,7 @@ public class BITTestCase10 extends BaseTestCase {
                 i.setVersion(detachedItem.getVersion());
 
                 int version = i.getVersion();
-                applyInterceptorBeforeMerge(i);
-                i = em.merge(i);
-                em.flush();
+                i = merge(i);
 
                 assertThat(i.getVendorInfos()).hasSize(1);
 
@@ -364,9 +362,7 @@ public class BITTestCase10 extends BaseTestCase {
             i.setManufacturer(manufacturer); // simulate detached manufacturer
             i.setName("Item 10 Test update with lazy init collection");
 
-            applyInterceptorBeforeMerge(i);
-            i = em.merge(i);
-            em.flush();
+            i = merge(i);
 
             Set<ItemText> list = i.getItemTexts();
 

@@ -143,11 +143,22 @@ public abstract class BaseTestCase  {
 		return (T) persistentAttributeInterceptable;
 	}
 
-	protected  <T extends BITEntity> T applyInterceptor(T entity) {
-		return applyInterceptor(entity, true);
+	protected  <T extends BITEntity> void applyInterceptor(T entity) {
+		applyInterceptor(entity, true);
 	}
 
-	private <T extends BITEntity> T applyInterceptor(T entity, boolean uninitialized) {
+	public <T extends BITEntity> void applyInterceptorAfterPersist(T entity) {
+		applyInterceptor(entity, false);
+	}
+
+	private <T extends BITEntity> void applyInterceptor(T entity, boolean uninitialized) {
+		if (!(entity instanceof PersistentAttributeInterceptable))
+			return;
+
+		PersistentAttributeInterceptable interceptable = ((PersistentAttributeInterceptable) entity );
+		if (interceptable.$$_hibernate_getInterceptor() != null)
+			return;
+
 		SharedSessionContractImplementor s = getDelegate().unwrap(SharedSessionContractImplementor.class);
 		MetamodelImplementor entityMetamodelImpl = s.getFactory().getMetamodel();
 		final EntityPersister persister = entityMetamodelImpl.entityPersister(entity.getClass().getName());
@@ -156,13 +167,19 @@ public abstract class BaseTestCase  {
 		
 		persistenceContext.addEnhancedProxy(entityKey, (PersistentAttributeInterceptable) entity);
 		if (uninitialized) {
-			persistenceContext.addEntry(entity, Status.MANAGED, null, null, entity.getId(), entity.getVersion(), LockMode.NONE, true, persister, false);
+			persistenceContext.addEntry(entity, org.hibernate.engine.spi.Status.MANAGED, null, null, entity.getId(), entity.getVersion(), LockMode.NONE, true, persister, false);
 		}
 		persister.getBytecodeEnhancementMetadata().injectEnhancedEntityAsProxyInterceptor(entity, entityKey, s);
-		return entity;
 	}
 
-	protected <T extends BITEntity> T applyInterceptorBeforeMerge(T entity) {
+	public <T extends BITEntity> void applyInterceptorBeforeMerge(T entity) {
+		if (!(entity instanceof PersistentAttributeInterceptable))
+			return;
+
+		PersistentAttributeInterceptable interceptable = ( (PersistentAttributeInterceptable) entity );
+		if (interceptable.$$_hibernate_getInterceptor() != null)
+			return;
+
 		SharedSessionContractImplementor s = getDelegate().unwrap(SharedSessionContractImplementor.class);
 		MetamodelImplementor entityMetamodelImpl = s.getFactory().getMetamodel();
 		final EntityPersister persister = entityMetamodelImpl.entityPersister(entity.getClass().getName());
@@ -175,13 +192,19 @@ public abstract class BaseTestCase  {
 						.getLazyAttributeNames(),
 				s
 		);
-		( (PersistentAttributeInterceptable) entity ).$$_hibernate_setInterceptor(interceptor);
-		return entity;
+		interceptable.$$_hibernate_setInterceptor(interceptor);
 	}
 
 	protected <T extends BITEntity> void persist(T entity) {
 		em.persist(entity);
-		applyInterceptor(entity, false);
+		applyInterceptorAfterPersist(entity);
 		em.flush();
+	}
+
+	protected <T extends BITEntity> T merge(T entity) {
+		applyInterceptorBeforeMerge(entity);
+		entity = em.merge(entity);
+		em.flush();
+		return entity;
 	}
 }
