@@ -13,6 +13,7 @@ public class SerialNumber extends BusinessEntity
     private Item item;
     private String serialNumber;
     private SalesOrderDetail salesOrderDetail;
+    private PurchaseOrderDetail purchaseOrderDetail;
 
     public SerialNumber() {
 
@@ -53,6 +54,15 @@ public class SerialNumber extends BusinessEntity
 
     public void setSalesOrderDetail(SalesOrderDetail salesOrderDetail) {
         this.salesOrderDetail = salesOrderDetail;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    public PurchaseOrderDetail getPurchaseOrderDetail() {
+        return purchaseOrderDetail;
+    }
+
+    public void setPurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail) {
+        this.purchaseOrderDetail = purchaseOrderDetail;
     }
 
 }

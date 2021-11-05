@@ -22,6 +22,10 @@ public class Item extends BusinessEntity{
 	protected Item() {
 	}
 
+	public Item(Long id) {
+		super(id);
+	}
+
 	public Item(Long id, String name) {
 		super(id);
 		this.name = name;

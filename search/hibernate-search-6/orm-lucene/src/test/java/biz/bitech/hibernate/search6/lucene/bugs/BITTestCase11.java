@@ -15,7 +15,6 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(BytecodeEnhancerRunner.class)
 public class BITTestCase11 extends BaseTestCase {
 
     @Test
@@ -90,7 +89,7 @@ public class BITTestCase11 extends BaseTestCase {
                 Assert.assertThrows(
                         "Expected getVendorInfos() to throw, but it did not.",
                         LazyInitializationException.class,
-                        () -> detachedItem.getVendorInfos()
+                        () -> detachedItem.getVendorInfos().size()
                 );
             }
         }
@@ -361,6 +360,68 @@ public class BITTestCase11 extends BaseTestCase {
 
             Set<ItemText> list = i.getItemTexts();
 
+            endTransaction();
+        }
+
+        {
+            startTransaction();
+            PurchaseOrder po = new PurchaseOrder(1L);
+            em.persist(po);
+
+            PurchaseOrderDetail purchaseOrderDetail = new PurchaseOrderDetail(1L, po, new Item(1L));
+            em.persist(purchaseOrderDetail);
+
+            endTransaction();
+        }
+
+        {
+            startTransaction();
+
+            PurchaseOrderDetail purchaseOrderDetail = new PurchaseOrderDetail(1L);
+            purchaseOrderDetail.setPo(new PurchaseOrder(1L));
+            SerialNumber serialNumber = new SerialNumber(1L);
+            serialNumber.setPurchaseOrderDetail(purchaseOrderDetail);
+            serialNumber.setSerialNumber("ABCDEFG");
+            em.persist(serialNumber);
+            em.flush();
+
+            assertThat(serialNumber.getPurchaseOrderDetail().getPo().getPoDetails()).hasSize(1);
+
+            endTransaction();
+        }
+
+        {
+            startTransaction();
+            SearchSession searchSession = Search.session(em);
+            List<PurchaseOrder> hits = searchSession.search(PurchaseOrder.class)
+                    .where(f -> f.match().field("poDetails.serialNumbers.serialNumber").matching("ABCDEFG"))
+                    .fetchHits(20);
+            assertThat(hits).hasSize(1);
+            endTransaction();
+        }
+
+        {
+            startTransaction();
+            PurchaseOrder po = em.find(PurchaseOrder.class, 1L);
+            po.setPoDescription("New Description");
+            em.merge(po);
+            em.flush();
+
+            assertThat(po.getPoDetails()).hasSize(1);
+
+            for (PurchaseOrderDetail pod : po.getPoDetails()) {
+                assertThat(pod.getSerialNumbers()).hasSize(1);
+            }
+            endTransaction();
+        }
+
+        {
+            startTransaction();
+            SearchSession searchSession = Search.session(em);
+            List<PurchaseOrder> hits = searchSession.search(PurchaseOrder.class)
+                    .where(f -> f.match().field("poDetails.serialNumbers.serialNumber").matching("ABCDEFG"))
+                    .fetchHits(20);
+            assertThat(hits).hasSize(1);
             endTransaction();
         }
     }
