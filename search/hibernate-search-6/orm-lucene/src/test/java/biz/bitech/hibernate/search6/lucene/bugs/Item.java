@@ -60,7 +60,7 @@ public class Item extends BusinessEntity{
 		this.manufacturer = manufacturer;
 	}
 
-	private Set<SalesOrderDetail> salesOrderDetails = new HashSet<>();
+	private Set<SalesOrderDetail> salesOrderDetails;
 
 	@OneToMany(mappedBy = "item")
 	public Set<SalesOrderDetail> getSalesOrderDetails() {

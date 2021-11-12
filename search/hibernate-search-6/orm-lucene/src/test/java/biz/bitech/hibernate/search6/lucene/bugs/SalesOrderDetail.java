@@ -13,6 +13,8 @@ public class SalesOrderDetail extends BusinessEntity {
 
     Item item;
     SalesOrder salesOrder;
+    SalesOrderDetail salesOrderDetail;
+    Set<SalesOrderDetail> children;
 
     public SalesOrderDetail() {
 
@@ -61,4 +63,22 @@ public class SalesOrderDetail extends BusinessEntity {
         this.serialNumbers = serialNumbers;
     }
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    public SalesOrderDetail getSalesOrderDetail() {
+        return salesOrderDetail;
+    }
+
+    public void setSalesOrderDetail(SalesOrderDetail salesOrderDetail) {
+        this.salesOrderDetail = salesOrderDetail;
+    }
+
+    @OneToMany(mappedBy = "salesOrderDetail")
+    @IndexedEmbedded(includeDepth = 1)
+    public Set<SalesOrderDetail> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Set<SalesOrderDetail> children) {
+        this.children = children;
+    }
 }

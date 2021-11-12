@@ -22,7 +22,7 @@ public class SalesOrder extends BusinessEntity {
         super(id);
     }
 
-    private Set<SalesOrderDetail> salesOrderDetails = new HashSet<SalesOrderDetail>(0);
+    private Set<SalesOrderDetail> salesOrderDetails;
 
     @OneToMany(mappedBy = "salesOrder")
     @IndexedEmbedded(includePaths = {"serialNumbers.serialNumber"})

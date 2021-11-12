@@ -10,6 +10,7 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Indexed
@@ -35,14 +36,14 @@ public class Manufacturer extends BusinessEntity {
         this.name = name;
     }
 
-    private Collection<Item> items = new ArrayList<>();
+    private Set<Item> items;
 
     @OneToMany(mappedBy = "manufacturer")
-    public Collection<Item> getItems() {
+    public Set<Item> getItems() {
         return items;
     }
 
-    public void setItems(Collection<Item> items) {
+    public void setItems(Set<Item> items) {
         this.items = items;
     }
 }
