@@ -3,31 +3,39 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.hibernate.testcasetemplate</groupId>
-	<artifactId>test-case-template-hibernate-search-lucene</artifactId>
+	<artifactId>test-case-template-hibernate-search-5-lucene</artifactId>
 	<version>1.0.0.Final</version>
-	<name>Hibernate Search with Lucene Test Case Template</name>
+	<name>Hibernate Search 5 with Lucene Test Case Template</name>
 
 	<properties>
-		<version.org.hibernate.search>5.11.7.Final</version.org.hibernate.search>
-		<version.org.hibernate>5.4.24.Final</version.org.hibernate>
 
-		<version.com.h2database>1.4.200</version.com.h2database>
-		<version.junit>4.13.2</version.junit>
-		<version.org.slf4j>1.7.30</version.org.slf4j>
+		<version.org.hibernate.search>5.11.12.Final</version.org.hibernate.search>
+		<version.org.hibernate>5.4.33</version.org.hibernate>
+		<version.com.h2database>2.3.232</version.com.h2database>
+		<version.junit-jupiter>5.11.4</version.junit-jupiter>
+		<version.org.assertj.assertj-core>3.27.3</version.org.assertj.assertj-core>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>${version.junit-jupiter}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-search-orm</artifactId>
-			<version>${version.org.hibernate.search}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-search-testing</artifactId>
 			<version>${version.org.hibernate.search}</version>
 		</dependency>
 
@@ -41,26 +49,50 @@
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>${version.org.hibernate}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-testing</artifactId>
-			<version>${version.org.hibernate}</version>
-		</dependency>
 
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<version>${version.com.h2database}</version>
 		</dependency>
+
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${version.junit}</version>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-testing</artifactId>
+			<version>${version.org.hibernate}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${version.org.slf4j}</version>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-search-testing</artifactId>
+			<version>${version.org.hibernate.search}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-launcher</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>${version.org.assertj.assertj-core}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -69,21 +101,22 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
+				<version>3.14.0</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.2</version>
+				<version>3.5.3</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>2.22.2</version>
+				<version>3.5.3</version>
 				<executions>
 					<execution>
 						<goals>
